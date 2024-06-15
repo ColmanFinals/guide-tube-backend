@@ -1,8 +1,8 @@
-FROM node:16-alpine
+FROM node:18-alpine
 WORKDIR /usr/src/app
 COPY package*.json ./
 RUN npm install
 COPY . .
 RUN npm run build
 EXPOSE 3001
-CMD [ "npx tsc && node dist/src/app.js"]
+CMD npm run start
