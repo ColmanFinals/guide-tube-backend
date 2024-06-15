@@ -1,7 +1,7 @@
 // api.test.ts
 
 import request from "supertest";
-import app, {server} from "../app";
+import {app,server} from "../app";
 import {closeDB} from "../db/db";
 
 let accessToken = "";

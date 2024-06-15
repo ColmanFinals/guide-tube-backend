@@ -10,7 +10,7 @@ import cors from 'cors';
 import path from 'path';
 import SwaggerDocs from "./utils/swagger";
 
-const app = express();
+export const app = express();
 const PORT: number = process.env.PORT || 3001;
 
 // Connect to MongoDB
