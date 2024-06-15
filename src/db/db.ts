@@ -5,7 +5,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 
 
-const mongoUri: string = "mongodb://0.0.0.0:27017"
+const mongoUri: string = process.env.MONGO_URI || "mongodb://0.0.0.0:27017"
 
 const connectDB = async () => {
     try {
