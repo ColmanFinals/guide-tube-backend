@@ -3,9 +3,10 @@ import fs from 'fs'
 import https from 'https'
 import express from 'express';
 import {closeDB, connectDB} from './db/db';
-import postRouter from './routes/postRoutes'
 import authRouter from './routes/authRoutes';
 import userRouter from './routes/userRoutes';
+import companyRouter from './routes/companyRoutes';
+
 import cors from 'cors';
 import path from 'path';
 import SwaggerDocs from "./utils/swagger";
@@ -34,7 +35,7 @@ app.use(express.json());
 app.use('/images', express.static(path.join(process.cwd(), 'public', 
 'images')));
 
-app.use("/post", postRouter);
+app.use('/company', companyRouter)
 app.use('/auth', authRouter)
 app.use('/user', userRouter)
 
