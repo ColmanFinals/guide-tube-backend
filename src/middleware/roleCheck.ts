@@ -1,11 +1,24 @@
 import { NextFunction, Request, Response } from "express";
+import User from "../models/userModule"; // Adjust path as necessary
 
-const checkSystemRole = (req: Request, res: Response, next: NextFunction) => {
+const checkSystemRole = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        let userRole = req.body.user._doc.role
+        // Retrieve user ID from the request body (you may need to adjust this based on your setup)
+        const userId = req.body.user?._id;
+
+        if (!userId) {
+            return res.status(401).json({ error: "Unauthorized: User ID not provided" });
+        }
+
+        // Fetch user from the database
+        const user = await User.findById(userId);
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
         
-        // Ensure the user is authenticated and has the role
-        if (req.body.user && userRole === "system") {
+        if (user.role === "system") {
             return next(); // User has the "system" role, proceed to the route
         }
 

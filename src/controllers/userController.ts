@@ -52,7 +52,6 @@ export const updateUserPicture = async (req: Request, res: Response) => {
         } else {
             console.log("User picture updated successfully");
         }
-        console.log(picturePath);
 
         res.status(201).json({filePath: picturePath});
     } catch (error) {
