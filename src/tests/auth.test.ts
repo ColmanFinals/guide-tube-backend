@@ -4,7 +4,7 @@ import request from "supertest";
 import  {app,server} from "../app";
 
 import {closeDB} from "../db/db";
-import User from "../models/userModule";
+import User from "../models/userModel";
 
 const fullname = "estFudlName";
 const userName = "estUserName";

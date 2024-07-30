@@ -2,14 +2,14 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import User from "../models/userModule";
-import {Request, Response} from "express";
+import User from "../models/userModel";
+import { Request, Response } from "express";
 
 
 export const updateUserPicture = async (req: Request, res: Response) => {
     try {
         // Retrieve the current user's data to get the old picture path
-        const {userId} = req.body;
+        const { userId } = req.body;
         const pictureName = req.file?.filename;
         // Construct the file paths
         const picturePath = `images/${pictureName}`;
@@ -43,8 +43,8 @@ export const updateUserPicture = async (req: Request, res: Response) => {
         // Update the user's picture path in the database
         const updatedUser = await User.findByIdAndUpdate(
             userId,
-            {$set: {picture: picturePath}},
-            {new: true}
+            { $set: { picture: picturePath } },
+            { new: true }
         );
 
         if (!updatedUser) {
@@ -53,10 +53,10 @@ export const updateUserPicture = async (req: Request, res: Response) => {
             console.log("User picture updated successfully");
         }
 
-        res.status(201).json({filePath: picturePath});
+        res.status(201).json({ filePath: picturePath });
     } catch (error) {
         console.error("Error updating user picture in the database:", error);
-        res.status(500).json({error: "Internal Server Error"});
+        res.status(500).json({ error: "Internal Server Error" });
     }
 };
 
@@ -68,15 +68,15 @@ export const getUserById = async (req: Request, res: Response) => {
         const user = await User.findById(userId);
 
         if (!user) {
-            return res.status(404).json({error: "User not found"});
+            return res.status(404).json({ error: "User not found" });
         }
 
         // Return relevant user information
 
-        res.status(200).send({userData: user});
+        res.status(200).send({ userData: user });
 
     } catch (error) {
         console.error("Error fetching user by ID:", error);
-        res.status(500).json({error: "Internal Server Error"});
+        res.status(500).json({ error: "Internal Server Error" });
     }
 };

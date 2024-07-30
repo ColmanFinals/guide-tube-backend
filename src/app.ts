@@ -6,8 +6,8 @@ import {closeDB, connectDB} from './db/db';
 import authRouter from './routes/authRoutes';
 import userRouter from './routes/userRoutes';
 import companyRouter from './routes/companyRoutes';
-import './models/guidModule';
-
+import './models/guideModel';
+import guideRoutes from './routes/guideRoutes';
 import cors from 'cors';
 import path from 'path';
 import SwaggerDocs from "./utils/swagger";
@@ -39,7 +39,7 @@ app.use('/images', express.static(path.join(process.cwd(), 'public',
 app.use('/company', companyRouter)
 app.use('/auth', authRouter)
 app.use('/user', userRouter)
-
+app.use('/guide', guideRoutes)
 
 
 export const server = app.listen(PORT, () => {

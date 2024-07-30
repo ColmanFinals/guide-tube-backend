@@ -2,7 +2,7 @@
 import {Request, Response} from "express";
 import bcrypt from "bcrypt";
 import jwt, {JwtPayload} from "jsonwebtoken";
-import User from "../models/userModule";
+import User from "../models/userModel";
 
 const accessTokenSecret: string = process.env.ACCESS_TOKEN_SECRET as string;
 const jwtTokenExpiration: string = process.env.JWT_TOKEN_EXPIRATION as string;
