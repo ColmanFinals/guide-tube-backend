@@ -6,6 +6,7 @@ import {closeDB, connectDB} from './db/db';
 import authRouter from './routes/authRoutes';
 import userRouter from './routes/userRoutes';
 import companyRouter from './routes/companyRoutes';
+import './models/guidModule';
 
 import cors from 'cors';
 import path from 'path';

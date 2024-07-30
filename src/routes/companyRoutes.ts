@@ -36,6 +36,36 @@ const router = express.Router();
  */
 router.post("/create", authenticate, checkSystemRole,companyController.createCompany);
 
+
+/**
+ * @openapi
+ * /company/getAll:
+ *  get:
+ *    tags:
+ *     - Company
+ *    summary: Get all companies
+ *    security:
+ *    - bearerAuth: []
+ *    responses:
+ *      200:
+ *        description: List of all companies
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                companies:
+ *                  type: array
+ *                  items:
+ *                    $ref: '#/components/schemas/CreateCompanyResponse'
+ *      401:
+ *        description: Unauthorized
+ *      500:
+ *        description: Internal Server Error
+ */
+router.get("/getAll", authenticate, checkSystemRole, companyController.getAllCompanies);
+
+
 /**
  * @openapi
  * /company/update:
@@ -298,7 +328,7 @@ router.put("/removeAdmin", authenticate, checkSystemRole,companyController.remov
  *      500:
  *        description: Internal Server Error
  */
-router.put("/addVideo", authenticate, companyController.addVideoToCompany);
+router.put("/addVideo", authenticate, companyController.addGuidToCompany);
 
 /**
  * @openapi
@@ -334,6 +364,39 @@ router.put("/addVideo", authenticate, companyController.addVideoToCompany);
  *      500:
  *        description: Internal Server Error
  */
-router.put("/removeVideo", authenticate, companyController.removeVideoFromCompany);
+router.put("/removeVideo", authenticate, companyController.removeGuidFromCompany);
+
+
+/**
+ * @openapi
+ * /company/delete:
+ *  delete:
+ *    tags:
+ *     - Company
+ *    summary: Delete a company by ID
+ *    security:
+ *    - bearerAuth: []
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              companyId:
+ *                type: string
+ *    responses:
+ *      200:
+ *        description: Company deleted successfully
+ *      400:
+ *        description: Bad request
+ *      401:
+ *        description: Unauthorized
+ *      404:
+ *        description: Company not found
+ *      500:
+ *        description: Internal Server Error
+ */
+router.delete("/delete/:companyId", authenticate, checkSystemRole, companyController.deleteCompany);
 
 export default router;

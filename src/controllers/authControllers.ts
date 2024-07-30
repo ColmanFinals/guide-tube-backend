@@ -52,11 +52,11 @@ async function login(req: Request, res: Response) {
             return res.status(401).json({message: "Invalid credentials"});
 
         // Generate a JWT token upon successful login
-        const AccessToken = jwt.sign({...user}, accessTokenSecret, {
+        const AccessToken = jwt.sign({_id:user._id,role:user.role}, accessTokenSecret, {
             expiresIn: jwtTokenExpiration,
         });
 
-        const refreshToken = jwt.sign({...user}, refreshTokenSecret);
+        const refreshToken = jwt.sign({_id:user._id,role:user.role}, refreshTokenSecret);
 
         if (user.tokens == null) user.tokens = [refreshToken];
         else user.tokens.push(refreshToken);

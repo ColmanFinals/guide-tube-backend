@@ -1,21 +1,19 @@
-// companyController.ts
 import Company from "../models/companyModule";
 import { Request, Response } from "express";
-
+import mongoose from "mongoose";
 
 // Create Company
 export const createCompany = async (req: Request, res: Response) => {
     try {
-        
-        const { name, users, admin, videos } = req.body;
+        const { name } = req.body;
         const creator = req.body.user; // Assuming authenticate middleware adds the user object to req
         
         const newCompany = new Company({
-            creator,
+            creator: new mongoose.Types.ObjectId(creator._id), // Reference to User collection
             name,
-            users,
-            admin,
-            videos
+            users: [],
+            admin: [],
+            guids: []
         });
 
         await newCompany.save();
@@ -30,11 +28,18 @@ export const createCompany = async (req: Request, res: Response) => {
 // Update Company
 export const updateCompany = async (req: Request, res: Response) => {
     try {
-        const { companyId, name, users, admin, videos } = req.body;
+        const { companyId, name, users, admin, guids } = req.body;
 
         const updatedCompany = await Company.findByIdAndUpdate(
             companyId,
-            { $set: { name, users, admin, videos } },
+            {
+                $set: {
+                    name,
+                    users: users.map((user: string) => new mongoose.Types.ObjectId(user)),
+                    admin: admin.map((admin: string) => new mongoose.Types.ObjectId(admin)),
+                    guids: guids.map((guid: string) => new mongoose.Types.ObjectId(guid))
+                }
+            },
             { new: true }
         );
 
@@ -51,13 +56,24 @@ export const updateCompany = async (req: Request, res: Response) => {
     }
 };
 
+// Get all companies
+export const getAllCompanies = async (req: Request, res: Response) => {
+    try {
+        const companies = await Company.find().populate('creator users admin guids'); // Fetch all companies and populate references
+        res.status(200).json({ companies });
+    } catch (error) {
+        console.error("Error fetching companies:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
 // Get Company by ID
 export const getCompanyById = async (req: Request, res: Response) => {
     try {
         const companyId = req.params.companyId;
 
         // Retrieve company from the database by companyId
-        const company = await Company.findById(companyId);
+        const company = await Company.findById(companyId).populate('creator users admin guids');
 
         if (!company) {
             return res.status(404).json({ error: "Company not found" });
@@ -81,7 +97,7 @@ export const addUserToCompany = async (req: Request, res: Response) => {
             return res.status(404).json({ error: "Company not found" });
         }
 
-        company.users.push(userId);
+        company.users.push(new mongoose.Types.ObjectId(userId));
         await company.save();
 
         res.status(200).json({ company });
@@ -101,7 +117,7 @@ export const removeUserFromCompany = async (req: Request, res: Response) => {
             return res.status(404).json({ error: "Company not found" });
         }
 
-        company.users = company.users.filter(user => user !== userId);
+        company.users = company.users.filter(user => !user.equals(userId));
         await company.save();
 
         res.status(200).json({ company });
@@ -121,7 +137,7 @@ export const addAdminToCompany = async (req: Request, res: Response) => {
             return res.status(404).json({ error: "Company not found" });
         }
 
-        company.admin.push(adminId);
+        company.admin.push(new mongoose.Types.ObjectId(adminId));
         await company.save();
 
         res.status(200).json({ company });
@@ -141,7 +157,7 @@ export const removeAdminFromCompany = async (req: Request, res: Response) => {
             return res.status(404).json({ error: "Company not found" });
         }
 
-        company.admin = company.admin.filter(admin => admin !== adminId);
+        company.admin = company.admin.filter(admin => !admin.equals(adminId));
         await company.save();
 
         res.status(200).json({ company });
@@ -151,42 +167,67 @@ export const removeAdminFromCompany = async (req: Request, res: Response) => {
     }
 };
 
-// Add Video to Company
-export const addVideoToCompany = async (req: Request, res: Response) => {
+// Add GUID to Company
+export const addGuidToCompany = async (req: Request, res: Response) => {
     try {
-        const { companyId, videoId } = req.body;
+        const { companyId, guidId } = req.body;
 
         const company = await Company.findById(companyId);
         if (!company) {
             return res.status(404).json({ error: "Company not found" });
         }
 
-        company.videos.push(videoId);
+        company.guids.push(new mongoose.Types.ObjectId(guidId));
         await company.save();
 
         res.status(200).json({ company });
     } catch (error) {
-        console.error("Error adding video to company:", error);
+        console.error("Error adding GUID to company:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
 
-// Remove Video from Company
-export const removeVideoFromCompany = async (req: Request, res: Response) => {
+// Remove GUID from Company
+export const removeGuidFromCompany = async (req: Request, res: Response) => {
     try {
-        const { companyId, videoId } = req.body;
+        const { companyId, guidId } = req.body;
 
         const company = await Company.findById(companyId);
         if (!company) {
             return res.status(404).json({ error: "Company not found" });
         }
 
-        company.videos = company.videos.filter(video => video !== videoId);
+        company.guids = company.guids.filter(guid => !guid.equals(guidId));
         await company.save();
 
         res.status(200).json({ company });
     } catch (error) {
-        console.error("Error removing video from company:", error);
+        console.error("Error removing GUID from company:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+// Delete a company by ID
+export const deleteCompany = async (req: Request, res: Response) => {
+    try {
+        const { companyId } = req.params; // Get companyId from URL parameters
+
+        // Ensure the companyId is provided
+        if (!companyId) {
+            return res.status(400).json({ error: "Company ID is required" });
+        }
+
+        // Find and delete the company
+        const result = await Company.findByIdAndDelete(companyId);
+
+        // Check if the company was found and deleted
+        if (!result) {
+            return res.status(404).json({ error: "Company not found" });
+        }
+
+        res.status(200).json({ message: "Company deleted successfully" });
+    } catch (error) {
+        console.error("Error deleting company:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
