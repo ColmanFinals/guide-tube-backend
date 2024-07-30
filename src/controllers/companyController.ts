@@ -1,4 +1,4 @@
-import Company from "../models/companyModule";
+import Company from "../models/companyModel";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 
