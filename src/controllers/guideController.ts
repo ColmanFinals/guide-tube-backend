@@ -3,17 +3,20 @@ import Guide from '../models/guideModel';
 import Playlist from '../models/playlistModel';
 import Video, { IVideo } from '../models/videoModel';
 import User from '../models/userModel';
+import { addGuidToCompany } from './companyController';
 
 const saveGuide = async (req: Request, res: Response) => {
-    const { guideData, playlistData, videoData } = req.body;
+    const { guideData, playlistData, videoData, companyName } = req.body;
 
     try {
 
-        const { userId } = req.body;
-        if(!userId) {
+        const user = req.body.user;
+        console.log("body: " + req.body)
+        console.log("user: " +user)
+        if(!user) {
             return res.status(401).send("missing fileds");
         }
-        const currentUser = await User.findById(userId);
+        const currentUser = await User.findById(user);
         if(!currentUser){
             return res.status(404).send("Logged in user doesn't exist");
         }
@@ -28,11 +31,12 @@ const saveGuide = async (req: Request, res: Response) => {
             ...guideData,
             playlist: savedPlaylist._id,
             videos: videoIds,
-            uploader: currentUser,
+            uploader: currentUser._id,
         });
-        const savedGuide = await newGuide.save();
 
-        return res.status(201).json(savedGuide);
+        const savedGuide  = await newGuide.save();
+        await addGuidToCompany(companyName, savedGuide._id)
+        return res.status(201).send("Success");
     } catch (error) {
         return res.status(500).json({ error: 'Failed to save guide', details: error });
     }
@@ -53,5 +57,6 @@ async function saveVideos(videoData: IVideo[]): Promise<string[]> {
     }
     return videoIds;
 }
+
 
 export default {saveGuide};
