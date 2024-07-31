@@ -8,6 +8,7 @@ interface IGuide extends Document {
     createdAt: Date;
     name: string;
     views: number;
+    privacyStatus: string;
     uploader: mongoose.Types.ObjectId | IUser;
     playlist: mongoose.Types.ObjectId | IPlaylist;
     videos: mongoose.Types.ObjectId[] | IVideo[];
@@ -17,7 +18,8 @@ const GuideSchema: Schema = new Schema({
     createdAt: { type: Date, default: Date.now },
     name: { type: String, required: true },
     views: { type: Number, required: true },
-    uploader: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
+    privacyStatus: { type: String, required: true },
+    uploader: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     playlist: { type: mongoose.Schema.Types.ObjectId, ref: 'Playlist', required: true },
     videos: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Video', required: true }],
 });

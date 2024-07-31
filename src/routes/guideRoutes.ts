@@ -23,6 +23,8 @@ const router: Router = express.Router();
  *             properties:
  *               companyName:
  *                 type: string
+ *               privacyStatus:
+ *                 type: string
  *               guideData:
  *                 type: object
  *                 properties:
@@ -36,6 +38,7 @@ const router: Router = express.Router();
  *                 required:
  *                   - name
  *                   - views
+ *                   - privacyStatus
  *               playlistData:
  *                 type: object
  *                 properties:
@@ -50,18 +53,12 @@ const router: Router = express.Router();
  *                     type: string
  *                   description:
  *                     type: string
- *                   status:
- *                     type: object
- *                     properties:
- *                       privacyStatus:
- *                         type: string
  *                 required:
  *                   - id
  *                   - publishedAt
  *                   - channelId
  *                   - title
  *                   - description
- *                   - status
  *               videoData:
  *                 type: array
  *                 items:

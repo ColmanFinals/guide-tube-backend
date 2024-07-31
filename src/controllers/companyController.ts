@@ -194,7 +194,7 @@ export const removeGuidFromCompany = async (req: Request, res: Response) => {
             return res.status(404).json({ error: "Company not found" });
         }
 
-        company.guides = company.guides.filter(guides => !guid.equals(guidId));
+        company.guides = company.guides.filter(guides => !guides.equals(guidId));
         await company.save();
 
         res.status(200).json({ company });
