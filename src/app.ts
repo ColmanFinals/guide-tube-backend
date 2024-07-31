@@ -37,6 +37,7 @@ app.use('/images', express.static(path.join(process.cwd(), 'public',
 'images')));
 
 app.use('/company', companyRouter)
+
 app.use('/auth', authRouter)
 app.use('/user', userRouter)
 
