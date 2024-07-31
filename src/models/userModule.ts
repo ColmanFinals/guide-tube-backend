@@ -1,4 +1,4 @@
-import mongoose, {Document, Schema} from "mongoose";
+import mongoose, { Document, Schema } from "mongoose";
 
 /**
  * @openapi
@@ -20,6 +20,9 @@ import mongoose, {Document, Schema} from "mongoose";
  *        fullName:
  *          type: string
  *          default: Jane Doe
+ *        role:
+ *          type: string
+ *          default: user
  *    CreateUserResponse:
  *      type: object
  *      properties:
@@ -28,6 +31,8 @@ import mongoose, {Document, Schema} from "mongoose";
  *        password:
  *          type: string
  *        fullName:
+ *          type: string
+ *        role:
  *          type: string
  *    LoginUserInput:
  *      type: object
@@ -56,17 +61,18 @@ export interface IUser extends Document {
     fullName: string;
     tokens: string[];
     picture: string;
+    role: string; // Add role field to the interface
 }
 
 const defaultPicturePath = "images/default-user-profile.jpg"; // Set your default path here
 
-
 const userSchema = new Schema<IUser>({
-    username: {type: String, required: true},
-    password: {type: String, required: true},
-    fullName: {type: String, required: true},
-    tokens: {type: [String], required: true},
-    picture: {type: String, default: defaultPicturePath, required: true},
+    username: { type: String, required: true },
+    password: { type: String, required: true },
+    fullName: { type: String, required: true },
+    tokens: { type: [String], required: true },
+    picture: { type: String, default: defaultPicturePath, required: true },
+    role: { type: String, default: "user" } // Add role field with default value
 });
 
 const User = mongoose.model<IUser>("User", userSchema);
