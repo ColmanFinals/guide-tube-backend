@@ -10,12 +10,8 @@ export interface IPlaylist extends Document {
     channelId: string;
     title: string;
     description: string;
-    status: IPlaylistStatus;
 }
 
-const PlaylistStatusSchema: Schema = new Schema({
-    privacyStatus: { type: String, required: true },
-});
 
 const PlaylistSchema: Schema = new Schema({
     id: { type: String, required: true },
@@ -23,7 +19,6 @@ const PlaylistSchema: Schema = new Schema({
     channelId: { type: String, required: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
-    status: { type: PlaylistStatusSchema, required: true },
 });
 
 const Playlist = mongoose.model<IPlaylist>('Playlist', PlaylistSchema);
