@@ -10,8 +10,6 @@ const refreshTokenSecret: string = process.env.REFRESH_TOKEN_SECRET as string;
 
 async function signup(req: Request, res: Response) {
     try {
-        console.log("asd");
-        
         const {username, password, fullName} = req.body;
 
         // Check if the user already exists
@@ -54,11 +52,11 @@ async function login(req: Request, res: Response) {
             return res.status(401).json({message: "Invalid credentials"});
 
         // Generate a JWT token upon successful login
-        const AccessToken = jwt.sign({_id: user._id}, accessTokenSecret, {
+        const AccessToken = jwt.sign({...user}, accessTokenSecret, {
             expiresIn: jwtTokenExpiration,
         });
 
-        const refreshToken = jwt.sign({_id: user._id}, refreshTokenSecret);
+        const refreshToken = jwt.sign({...user}, refreshTokenSecret);
 
         if (user.tokens == null) user.tokens = [refreshToken];
         else user.tokens.push(refreshToken);
