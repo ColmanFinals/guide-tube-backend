@@ -1,6 +1,6 @@
 import express, { Router } from 'express';
 import authenticate from '../middleware/auth';
-import GuideController from '../controllers/GuideController';
+import GuideController from '../controllers/guideController';
 
 
 const router: Router = express.Router();
@@ -21,6 +21,8 @@ const router: Router = express.Router();
  *           schema:
  *             type: object
  *             properties:
+ *               companyName:
+ *                 type: string
  *               guideData:
  *                 type: object
  *                 properties:
@@ -90,27 +92,7 @@ const router: Router = express.Router();
  *                   - description
  *     responses:
  *       201:
- *         description: Guide created successfully
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 _id:
- *                   type: string
- *                 createdAt:
- *                   type: string
- *                   format: date-time
- *                 name:
- *                   type: string
- *                 views:
- *                   type: number
- *                 playlist:
- *                   type: string
- *                 videos:
- *                   type: array
- *                   items:
- *                     type: string
+ *         description: success  
  *       401:
  *         description: Unauthorized
  *       404:
