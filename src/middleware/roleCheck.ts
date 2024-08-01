@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import User from "../models/userModule"; // Adjust path as necessary
+import User from "../models/userModel"; // Adjust path as necessary
 
 const checkSystemRole = async (req: Request, res: Response, next: NextFunction) => {
     try {

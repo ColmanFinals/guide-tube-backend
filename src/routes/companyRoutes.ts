@@ -296,42 +296,6 @@ router.put("/removeAdmin", authenticate, checkSystemRole,companyController.remov
 
 /**
  * @openapi
- * /company/addVideo:
- *  put:
- *    tags:
- *     - Company
- *    summary: Add a video to a company
- *    security:
- *    - bearerAuth: []
- *    requestBody:
- *      required: true
- *      content:
- *        application/json:
- *          schema:
- *            type: object
- *            properties:
- *              companyId:
- *                type: string
- *              videoId:
- *                type: string
- *    responses:
- *      200:
- *        description: Video added to company successfully
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/CreateCompanyResponse'
- *      401:
- *        description: Unauthorized
- *      404:
- *        description: Company not found
- *      500:
- *        description: Internal Server Error
- */
-router.put("/addVideo", authenticate, companyController.addGuidToCompany);
-
-/**
- * @openapi
  * /company/removeVideo:
  *  put:
  *    tags:

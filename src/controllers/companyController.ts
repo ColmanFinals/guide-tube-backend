@@ -1,4 +1,4 @@
-import Company from "../models/companyModule";
+import Company from "../models/companyModel";
 import { Request, Response } from "express";
 import mongoose from "mongoose";
 
@@ -13,7 +13,7 @@ export const createCompany = async (req: Request, res: Response) => {
             name,
             users: [],
             admin: [],
-            guids: []
+            guides: []
         });
 
         await newCompany.save();
@@ -28,7 +28,7 @@ export const createCompany = async (req: Request, res: Response) => {
 // Update Company
 export const updateCompany = async (req: Request, res: Response) => {
     try {
-        const { companyId, name, users, admin, guids } = req.body;
+        const { companyId, name, users, admin, guides } = req.body;
 
         const updatedCompany = await Company.findByIdAndUpdate(
             companyId,
@@ -37,7 +37,7 @@ export const updateCompany = async (req: Request, res: Response) => {
                     name,
                     users: users.map((user: string) => new mongoose.Types.ObjectId(user)),
                     admin: admin.map((admin: string) => new mongoose.Types.ObjectId(admin)),
-                    guids: guids.map((guid: string) => new mongoose.Types.ObjectId(guid))
+                    guides: guides.map((guid: string) => new mongoose.Types.ObjectId(guid))
                 }
             },
             { new: true }
@@ -59,7 +59,7 @@ export const updateCompany = async (req: Request, res: Response) => {
 // Get all companies
 export const getAllCompanies = async (req: Request, res: Response) => {
     try {
-        const companies = await Company.find().populate('creator users admin guids'); // Fetch all companies and populate references
+        const companies = await Company.find().populate('creator users admin guides'); // Fetch all companies and populate references
         res.status(200).json({ companies });
     } catch (error) {
         console.error("Error fetching companies:", error);
@@ -73,7 +73,7 @@ export const getCompanyById = async (req: Request, res: Response) => {
         const companyId = req.params.companyId;
 
         // Retrieve company from the database by companyId
-        const company = await Company.findById(companyId).populate('creator users admin guids');
+        const company = await Company.findById(companyId).populate('creator users admin guides');
 
         if (!company) {
             return res.status(404).json({ error: "Company not found" });
@@ -167,23 +167,20 @@ export const removeAdminFromCompany = async (req: Request, res: Response) => {
     }
 };
 
-// Add GUID to Company
-export const addGuidToCompany = async (req: Request, res: Response) => {
-    try {
-        const { companyId, guidId } = req.body;
 
-        const company = await Company.findById(companyId);
+export const addGuidToCompany = async (companyName: string, guideId: string) => {
+    try {
+
+        const company = await Company.findOne({"name": companyName});
         if (!company) {
-            return res.status(404).json({ error: "Company not found" });
+            throw Error("Company doesn't exist")
         }
 
-        company.guids.push(new mongoose.Types.ObjectId(guidId));
+        company.guides.push(new mongoose.Types.ObjectId(guideId));
         await company.save();
-
-        res.status(200).json({ company });
     } catch (error) {
         console.error("Error adding GUID to company:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        throw Error("Internal Server Error: " + error );
     }
 };
 
@@ -197,7 +194,7 @@ export const removeGuidFromCompany = async (req: Request, res: Response) => {
             return res.status(404).json({ error: "Company not found" });
         }
 
-        company.guids = company.guids.filter(guid => !guid.equals(guidId));
+        company.guides = company.guides.filter(guides => !guides.equals(guidId));
         await company.save();
 
         res.status(200).json({ company });
