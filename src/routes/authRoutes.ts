@@ -76,30 +76,18 @@ router.post('/googleLogin', authController.googleLogin);
 
 /**
  * @openapi
- * /auth/logout:
- *   post:
- *     tags:
- *       - Authentication
- *     summary: Logout a user
- *     security:
- *     - bearerAuth: []
- *     responses:
- *       200:
- *         description: Success
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 message:
- *                   type: string
- *                   description: Logged out successfully
- *       401:
- *         description: Unauthorized
- *       403:
- *         description: Forbidden
- */
-router.post('/logout', authenticate, authController.logout);
+* /auth/logout:
+*   post:
+*     summary: logout a user
+*     tags: [Authentication]
+*     description: need to provide the refresh token in the auth header
+*     security:
+*       - bearerAuth: []
+*     responses:
+*       200:
+*         description: logout completed successfully
+*/
+router.post("/logout", authController.logout);
 
 /**
  * @openapi
