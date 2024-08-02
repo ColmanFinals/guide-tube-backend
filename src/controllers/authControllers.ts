@@ -118,7 +118,6 @@ async function refreshToken(req: Request, res: Response) {
     const authHeaders = req.headers["authorization"];
     const token = authHeaders && authHeaders.split(" ")[2];
 
-
     if (token == null) {
         return res.sendStatus(401); // Unauthorized
     }
@@ -167,38 +166,34 @@ async function refreshToken(req: Request, res: Response) {
     });
 }
 
+
 async function logout(req: Request, res: Response) {
     const authHeaders = req.headers["authorization"];
-    const token = authHeaders && authHeaders.split(" ")[2];
+    const refreshToken = authHeaders && authHeaders.split(" ")[2];
 
-    if (token == null) {
+    if (refreshToken == null) {
         return res.sendStatus(401); // Unauthorized
     }
 
-    jwt.verify(token, refreshTokenSecret, async (err, userInfo) => {
+    jwt.verify(refreshToken, refreshTokenSecret, async (err, userInfo) => {
         if (err) {
+            console.error("JWT Verification Error:", err);
             return res.status(403).send(err.message);
         }
-        const user = await User.findById((userInfo as JwtPayload)._id);
 
         try {
-            if (!user?.tokens) {
-                return res.status(400).send("User tokens not available");
-            }
-
-            if (!user.tokens.includes(token)) {
-                user.tokens = [];
-                await user.save();
+            const user = await User.findById((userInfo as JwtPayload)._id);
+            if (!user || !user.tokens || !user.tokens.includes(refreshToken)) {
                 return res.status(403).send("Invalid request");
             }
-            user.tokens.splice(user.tokens.indexOf(token), 1);
+
+            user.tokens.splice(user.tokens.indexOf(refreshToken), 1);
             await user.save();
-            res.status(200).send();
+            return res.json({ message: "Logged out successfully" });
         } catch (err) {
-            return res.status(403).send();
+            return res.status(500).send("Server error");
         }
     });
-    res.json({message: "Logged out successfully"});
 }
 
 
