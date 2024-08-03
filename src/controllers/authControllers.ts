@@ -196,5 +196,34 @@ async function logout(req: Request, res: Response) {
     });
 }
 
+// change user password
+export const changePassword = async (req: Request, res: Response) => {
+    try {
+        const userId = req.body["user"]["_id"]
+        const { currentPassword, newPassword } = req.body;
+        // Check if the user exists
+
+        const existingUser = await User.findOne({_id: userId});
+        if (!existingUser)
+            return res.status(401).json({message: "Invalid credentials"});
+
+        // Check if the password is correct
+        const passwordMatch = await bcrypt.compare(currentPassword, existingUser.password);
+        if (!passwordMatch)
+            return res.status(401).json({message: "Invalid credentials"});
+
+        console.log("matany")
+        
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        existingUser.password = hashedPassword
+        await existingUser.save()
+
+        res.status(200).send({ message: "updated password successfully" });
+
+    } catch (error) {
+        console.error("updating user password:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
 
 export {signup, login, googleLogin, logout, refreshToken};

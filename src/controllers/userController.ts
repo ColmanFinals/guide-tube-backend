@@ -2,8 +2,10 @@
 
 import * as fs from "fs";
 import * as path from "path";
-import User from "../models/userModel";
+import User from '../models/userModel';
 import { Request, Response } from "express";
+import Company from "../models/companyModel";
+import mongoose from "mongoose";
 
 
 export const updateUserPicture = async (req: Request, res: Response) => {
@@ -77,6 +79,46 @@ export const getUserById = async (req: Request, res: Response) => {
 
     } catch (error) {
         console.error("Error fetching user by ID:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+export const fetchAllUsers = async (req: Request, res: Response) => {
+    try {
+        // Retrieve all users from the database
+        const users = await User.find({});
+
+        if (!users || users.length === 0) {
+            return res.status(404).json({ error: "No users found" });
+        }
+
+        // Return relevant user information
+        res.status(200).send({ usersData: users });
+
+    } catch (error) {
+        console.error("Error fetching all users:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+// Is user Admin
+export const isAdmin = async (req: Request, res: Response) => {
+    try {
+        const userId = req.body["user"]["_doc"]["_id"]
+        // Retrieve all users from the database
+        const companies = await Company.find({});
+        
+        const isUserAdmin = companies.some(company => company.admin.includes(new mongoose.Types.ObjectId(userId)));
+
+        // Return relevant user information
+        if (isUserAdmin) {
+            res.status(200).send({ isAdmin: true });
+        } else {
+            res.status(200).send({ isAdmin: false });
+        }
+
+    } catch (error) {
+        console.error("Error finding if a user is admin:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 };

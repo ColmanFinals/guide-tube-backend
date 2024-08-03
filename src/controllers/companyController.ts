@@ -97,7 +97,15 @@ export const addUserToCompany = async (req: Request, res: Response) => {
             return res.status(404).json({ error: "Company not found" });
         }
 
-        company.users.push(new mongoose.Types.ObjectId(userId));
+        const mongoUserID = new mongoose.Types.ObjectId(userId)
+
+        if (company.admin.includes(mongoUserID)){
+            company.admin = company.admin.filter(admin => !admin.equals(userId));
+        }
+
+        if (!company.users.includes(mongoUserID)){
+            company.users.push(mongoUserID);
+        }
         await company.save();
 
         res.status(200).json({ company });
@@ -137,7 +145,15 @@ export const addAdminToCompany = async (req: Request, res: Response) => {
             return res.status(404).json({ error: "Company not found" });
         }
 
-        company.admin.push(new mongoose.Types.ObjectId(adminId));
+        const mongoAdminId = new mongoose.Types.ObjectId(adminId)
+
+        if (company.users.includes(mongoAdminId)){
+            company.users = company.users.filter(user => !user.equals(adminId));
+        }
+
+        if (!company.admin.includes(mongoAdminId)){
+            company.admin.push(mongoAdminId);
+        }
         await company.save();
 
         res.status(200).json({ company });
@@ -225,6 +241,26 @@ export const deleteCompany = async (req: Request, res: Response) => {
         res.status(200).json({ message: "Company deleted successfully" });
     } catch (error) {
         console.error("Error deleting company:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+// Fetch My Companies as Admin
+export const fetchMyCompanies = async (req: Request, res: Response) => {
+    try {
+        const userId = req.body["user"]["_doc"]["_id"]
+        // // Retrieve all users from the database
+        // const companies = await Company.find({});
+        
+        // // Filter companies where the user is an admin
+        // const adminCompanies = companies.filter(company => company.admin.includes(String(userId)));
+        const adminCompanies = await Company.find({ admin: { $in: [userId] } })
+        
+        // Return the list of companies
+        res.status(200).send({ adminCompanies });
+
+    } catch (error) {
+        console.error("Error fetching my companies:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
