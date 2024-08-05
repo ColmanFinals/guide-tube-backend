@@ -81,4 +81,57 @@ router.put("/updatePicture", authenticate, uploadFile, userController.updateUser
  */
 router.get("/getUserData/:userId", authenticate, userController.getUserById);
 
+/**
+ * @openapi
+ * /user/fetch:
+ *  get:
+ *    tags:
+ *     - User
+ *    summary: fetch all users
+ *    security:
+ *    - bearerAuth: []
+ *    responses:
+ *      200:
+ *        description: Users data retrieved successfully
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                userData:
+ *                  $ref: '#/components/schemas/User'
+ *      401:
+ *        description: Unauthorized
+ *      500:
+ *        description: Internal Server Error
+ */
+router.get("/fetch", authenticate, userController.fetchAllUsers);
+
+/**
+ * @openapi
+ * /user/isAdmin:
+ *  get:
+ *    tags:
+ *     - User
+ *    summary: Check if user is Admin
+ *    security:
+ *    - bearerAuth: []
+ *    responses:
+ *      200:
+ *        description: User is admin in one of the companies check
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                isAdmin:
+ *                  type: boolean
+ *                  description: Indicates if the is admin in one of the companies
+ *      401:
+ *        description: Unauthorized
+ *      500:
+ *        description: Internal Server Error
+ */
+router.get("/isAdmin", authenticate, userController.isAdmin);
+
 export default router;

@@ -220,7 +220,7 @@ router.put("/addUser", authenticate, companyController.addUserToCompany);
  *      500:
  *        description: Internal Server Error
  */
-router.put("/removeUser", authenticate, checkSystemRole,companyController.removeUserFromCompany);
+router.put("/removeUser", authenticate,companyController.removeUserFromCompany);
 
 /**
  * @openapi
@@ -362,5 +362,34 @@ router.put("/removeVideo", authenticate, companyController.removeGuidFromCompany
  *        description: Internal Server Error
  */
 router.delete("/delete/:companyId", authenticate, checkSystemRole, companyController.deleteCompany);
+
+/**
+ * @openapi
+ * /company/fetchMyCompanies:
+ *  put:
+ *    tags:
+ *     - Company
+ *    summary: Fetch my companies as admin
+ *    security:
+ *    - bearerAuth: []
+ *    responses:
+*      200:
+*        description: List of companies where the user is an admin
+*        content:
+*          application/json:
+*            schema:
+*              type: object
+*              properties:
+*                adminCompanies:
+*                  type: array
+*                  items:
+*                    $ref: '#/components/schemas/Company'
+ *      401:
+ *        description: Unauthorized
+ *      500:
+ *        description: Internal Server Error
+ */
+router.put("/fetchMyCompanies", authenticate, companyController.fetchMyCompanies);
+
 
 export default router;

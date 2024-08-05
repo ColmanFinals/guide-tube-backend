@@ -131,5 +131,29 @@ router.post("/logout", authController.logout);
  */
 router.post('/refreshToken', authController.refreshToken);
 
+/**
+ * @openapi
+* /auth/changePassword:
+*   post:
+*     summary: change user password
+*     tags: [Authentication]
+*     security:
+*       - bearerAuth: []
+*     requestBody:
+*       required: true
+*       content:
+*         application/json:
+*           schema:
+*             type: object
+*             properties:
+*               currentPassword:
+*                 type: string
+*               newPassword:
+*                 type: string
+*     responses:
+*       200:
+*         description: changed user password
+*/
+router.post('/changePassword', authenticate, authController.changePassword);
 
 export default router;
