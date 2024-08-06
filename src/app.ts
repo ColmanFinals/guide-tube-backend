@@ -1,7 +1,7 @@
 // src/app.ts
 import fs from 'fs'
-import https from 'https';
-import http from 'http';
+import https, { Server as HttpsServer } from 'https';
+import http, { Server as HttpServer } from 'http';
 import express from 'express';
 import {closeDB, connectDB} from './db/db';
 import authRouter from './routes/authRoutes';
@@ -19,7 +19,7 @@ const PORT: number = process.env.PORT || 3001;
 // Connect to MongoDB
 connectDB();
 
-let server;
+let server: HttpServer | HttpsServer;
 
 app.use(function(req,res,next){
  res.header("Access-Control-Allow-Origin",'*')
