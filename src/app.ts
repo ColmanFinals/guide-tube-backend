@@ -15,7 +15,6 @@ import SwaggerDocs from "./utils/swagger";
 
 export const app = express();
 const PORT: number = process.env.PORT || 3001;
-const HTTPS_PORT: number = process.env.HTTPS_PORT;
 
 // Connect to MongoDB
 connectDB();
@@ -57,8 +56,8 @@ if (process.env.NODE_ENV !== 'production') {
     key: fs.readFileSync('/home/st111/cert/client-key.pem'),
     cert: fs.readFileSync('/home/st111/cert/client-cert.pem')
   };
-  server = https.createServer(options2, app).listen(HTTPS_PORT, () => {
-    console.log(`HTTPS Server is running on port ${HTTPS_PORT}`);
+  server = https.createServer(options2, app).listen(process.env.HTTPS_PORT, () => {
+    console.log(`HTTPS Server is running on port ${process.env.HTTPS_PORT}`);
   });
 }
 
