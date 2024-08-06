@@ -1,6 +1,7 @@
 // src/app.ts
 import fs from 'fs'
-import https from 'https'
+import https from 'https';
+import http from 'http';
 import express from 'express';
 import {closeDB, connectDB} from './db/db';
 import authRouter from './routes/authRoutes';
