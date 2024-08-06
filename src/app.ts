@@ -42,14 +42,19 @@ app.use('/auth', authRouter)
 app.use('/user', userRouter)
 app.use('/guide', guideRoutes)
 
+SwaggerDocs(app, PORT);
 
-export const server = app.listen(PORT, () => {
-   console.log(`Server is running on port ${PORT}`);})
-
-SwaggerDocs(app, 4001);
-
-
-// https.createServer(app).listen(3001)
+if (process.env.NODE_ENV !== 'production') {
+    console.log('development');
+    http.createServer(app).listen(process.env.PORT);
+  } else {
+    console.log('PRODUCTION');
+    const options2 = {
+      key: fs.readFileSync('/home/st111/cert/client-key.pem'),
+      cert: fs.readFileSync('/home/st111/cert/client-cert.pem')
+    };
+    https.createServer(options2, app).listen(process.env.HTTPS_PORT);
+  }
 
 
 
