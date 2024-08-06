@@ -15,6 +15,7 @@ import SwaggerDocs from "./utils/swagger";
 
 export const app = express();
 const PORT: number = process.env.PORT || 3001;
+const HTTPS_PORT: number = process.env.HTTPS_PORT;
 
 // Connect to MongoDB
 connectDB();
