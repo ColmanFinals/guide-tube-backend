@@ -19,6 +19,7 @@ const PORT: number = process.env.PORT || 3001;
 // Connect to MongoDB
 connectDB();
 
+let server;
 
 app.use(function(req,res,next){
  res.header("Access-Control-Allow-Origin",'*')
@@ -46,7 +47,7 @@ app.use('/guide', guideRoutes)
 
 if (process.env.NODE_ENV !== 'production') {
   console.log('development');
-  export const server = http.createServer(app).listen(PORT, () => {
+  server = http.createServer(app).listen(PORT, () => {
     console.log(`HTTP Server is running on port ${PORT}`);
   });
 } else {
@@ -55,11 +56,12 @@ if (process.env.NODE_ENV !== 'production') {
     key: fs.readFileSync('/home/st111/cert/client-key.pem'),
     cert: fs.readFileSync('/home/st111/cert/client-cert.pem')
   };
-  export const server = https.createServer(options2, app).listen(HTTPS_PORT, () => {
+  server = https.createServer(options2, app).listen(HTTPS_PORT, () => {
     console.log(`HTTPS Server is running on port ${HTTPS_PORT}`);
   });
 }
 
+export { server };
 
 
 
