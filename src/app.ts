@@ -43,11 +43,10 @@ app.use('/auth', authRouter)
 app.use('/user', userRouter)
 app.use('/guide', guideRoutes)
 
-let server;
 
 if (process.env.NODE_ENV !== 'production') {
   console.log('development');
-  server = http.createServer(app).listen(PORT, () => {
+  export server = http.createServer(app).listen(PORT, () => {
     console.log(`HTTP Server is running on port ${PORT}`);
   });
 } else {
@@ -56,12 +55,11 @@ if (process.env.NODE_ENV !== 'production') {
     key: fs.readFileSync('/home/st111/cert/client-key.pem'),
     cert: fs.readFileSync('/home/st111/cert/client-cert.pem')
   };
-  server = https.createServer(options2, app).listen(HTTPS_PORT, () => {
+  export server = https.createServer(options2, app).listen(HTTPS_PORT, () => {
     console.log(`HTTPS Server is running on port ${HTTPS_PORT}`);
   });
 }
 
-module.exports = { server };
 
 
 
