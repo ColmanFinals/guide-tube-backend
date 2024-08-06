@@ -46,7 +46,7 @@ app.use('/guide', guideRoutes)
 
 if (process.env.NODE_ENV !== 'production') {
   console.log('development');
-  export server = http.createServer(app).listen(PORT, () => {
+  export const server = http.createServer(app).listen(PORT, () => {
     console.log(`HTTP Server is running on port ${PORT}`);
   });
 } else {
@@ -55,7 +55,7 @@ if (process.env.NODE_ENV !== 'production') {
     key: fs.readFileSync('/home/st111/cert/client-key.pem'),
     cert: fs.readFileSync('/home/st111/cert/client-cert.pem')
   };
-  export server = https.createServer(options2, app).listen(HTTPS_PORT, () => {
+  export const server = https.createServer(options2, app).listen(HTTPS_PORT, () => {
     console.log(`HTTPS Server is running on port ${HTTPS_PORT}`);
   });
 }
