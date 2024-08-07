@@ -14,7 +14,7 @@ import path from 'path';
 import SwaggerDocs from "./utils/swagger";
 
 export const app = express();
-const PORT: number = process.env.PORT || 3001;
+const PORT = parseInt(process.env.PORT) || 3001;
 
 // Connect to MongoDB
 connectDB();
