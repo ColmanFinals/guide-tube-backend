@@ -8,6 +8,7 @@ declare global {
             REFRESH_TOKEN_SECRET: string;
             JWT_TOKEN_EXPIRATION: string;
             MONGO_URI: string;
+            NODE_ENV:string;
         }
     }
 }

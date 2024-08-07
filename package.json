@@ -9,7 +9,7 @@
     "start": "npx tsc && node dist/src/app.js",
     "dev": "npx ts-node-dev --respawn --transpile-only src/app.ts",
     "test": "jest --detectOpenHandles",
-    "prod": "tsc -p tsconfig_prod.json && pm2 restart ecosystem.config.js --env production"
+    "prod": "npx tsc && node dist/src/app.js"
   },
   "author": "",
   "license": "ISC",
