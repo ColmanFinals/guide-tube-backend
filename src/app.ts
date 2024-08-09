@@ -12,6 +12,8 @@ import guideRoutes from './routes/guideRoutes';
 import cors from 'cors';
 import path from 'path';
 import SwaggerDocs from "./utils/swagger";
+import './models/guidModule';
+
 
 export const app = express();
 const PORT = parseInt(process.env.PORT) || 3001;
