@@ -80,7 +80,7 @@ export const getCompanyById = async (req: Request, res: Response) => {
         }
 
         // Return relevant company information
-        res.status(200).send({ companyData: company });
+        res.status(200).send(company);
     } catch (error) {
         console.error("Error fetching company by ID:", error);
         res.status(500).json({ error: "Internal Server Error" });

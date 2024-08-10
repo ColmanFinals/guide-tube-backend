@@ -13,7 +13,7 @@ const companySchema = new Schema<ICompany>({
     name: { type: String, required: true, unique: true },
     users: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
     admin: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
-    guides: [{ type: Schema.Types.ObjectId, ref: 'Guid', default: [] }] 
+    guides: [{ type: Schema.Types.ObjectId, ref: 'Guide', default: [] }] 
 });
 
 const Company = mongoose.model<ICompany>('Company', companySchema);
