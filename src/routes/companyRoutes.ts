@@ -23,10 +23,6 @@ const router = express.Router();
  *    responses:
  *      201:
  *        description: Company created successfully
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/CreateCompanyResponse'
  *      401:
  *        description: Unauthorized
  *      400:
@@ -101,10 +97,7 @@ router.get("/getAll", authenticate, checkSystemRole, companyController.getAllCom
  *    responses:
  *      200:
  *        description: Company updated successfully
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/CreateCompanyResponse'
+
  *      401:
  *        description: Unauthorized
  *      400:
@@ -173,10 +166,6 @@ router.get("/getCompanyById/:companyId", authenticate, companyController.getComp
  *    responses:
  *      200:
  *        description: User added to company successfully
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/CreateCompanyResponse'
  *      401:
  *        description: Unauthorized
  *      404:
@@ -209,10 +198,6 @@ router.put("/addUser", authenticate, companyController.addUserToCompany);
  *    responses:
  *      200:
  *        description: User removed from company successfully
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/CreateCompanyResponse'
  *      401:
  *        description: Unauthorized
  *      404:
@@ -245,10 +230,6 @@ router.put("/removeUser", authenticate,companyController.removeUserFromCompany);
  *    responses:
  *      200:
  *        description: Admin added to company successfully
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/CreateCompanyResponse'
  *      401:
  *        description: Unauthorized
  *      404:
@@ -281,10 +262,7 @@ router.put("/addAdmin", authenticate, checkSystemRole,companyController.addAdmin
  *    responses:
  *      200:
  *        description: Admin removed from company successfully
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/CreateCompanyResponse'
+
  *      401:
  *        description: Unauthorized
  *      404:
@@ -317,10 +295,6 @@ router.put("/removeAdmin", authenticate, checkSystemRole,companyController.remov
  *    responses:
  *      200:
  *        description: Video removed from company successfully
- *        content:
- *          application/json:
- *            schema:
- *              $ref: '#/components/schemas/CreateCompanyResponse'
  *      401:
  *        description: Unauthorized
  *      404:
