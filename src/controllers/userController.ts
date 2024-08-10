@@ -75,7 +75,7 @@ export const getUserById = async (req: Request, res: Response) => {
 
         // Return relevant user information
 
-        res.status(200).send({ userData: user });
+        res.status(200).send(user);
 
     } catch (error) {
         console.error("Error fetching user by ID:", error);
@@ -93,7 +93,7 @@ export const fetchAllUsers = async (req: Request, res: Response) => {
         }
 
         // Return relevant user information
-        res.status(200).send({ usersData: users });
+        res.status(200).send(users);
 
     } catch (error) {
         console.error("Error fetching all users:", error);

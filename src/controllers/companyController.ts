@@ -248,16 +248,13 @@ export const deleteCompany = async (req: Request, res: Response) => {
 // Fetch My Companies as Admin
 export const fetchMyCompanies = async (req: Request, res: Response) => {
     try {
-        const userId = req.body["user"]["_doc"]["_id"]
-        // // Retrieve all users from the database
-        // const companies = await Company.find({});
-        
-        // // Filter companies where the user is an admin
-        // const adminCompanies = companies.filter(company => company.admin.includes(String(userId)));
+        const userId = req.body.user._id
+        console.log(userId)
         const adminCompanies = await Company.find({ admin: { $in: [userId] } })
+        console.log(adminCompanies)
         
         // Return the list of companies
-        res.status(200).send({ adminCompanies });
+        res.status(200).send(adminCompanies);
 
     } catch (error) {
         console.error("Error fetching my companies:", error);

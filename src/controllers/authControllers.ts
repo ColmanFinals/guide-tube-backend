@@ -211,8 +211,6 @@ export const changePassword = async (req: Request, res: Response) => {
         const passwordMatch = await bcrypt.compare(currentPassword, existingUser.password);
         if (!passwordMatch)
             return res.status(401).json({message: "Invalid credentials"});
-
-        console.log("matany")
         
         const hashedPassword = await bcrypt.hash(newPassword, 10);
         existingUser.password = hashedPassword

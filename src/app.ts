@@ -12,7 +12,7 @@ import guideRoutes from './routes/guideRoutes';
 import cors from 'cors';
 import path from 'path';
 import SwaggerDocs from "./utils/swagger";
-import './models/guidModule';
+import './models/guideModel';
 
 
 export const app = express();

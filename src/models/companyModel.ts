@@ -1,5 +1,4 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import Guid from './guideModel'; 
 
 interface ICompany extends Document {
     creator: mongoose.Types.ObjectId;

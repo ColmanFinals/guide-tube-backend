@@ -366,7 +366,7 @@ router.delete("/delete/:companyId", authenticate, checkSystemRole, companyContro
 /**
  * @openapi
  * /company/fetchMyCompanies:
- *  put:
+ *  get:
  *    tags:
  *     - Company
  *    summary: Fetch my companies as admin
@@ -389,7 +389,7 @@ router.delete("/delete/:companyId", authenticate, checkSystemRole, companyContro
  *      500:
  *        description: Internal Server Error
  */
-router.put("/fetchMyCompanies", authenticate, companyController.fetchMyCompanies);
+router.get("/fetchMyCompanies", authenticate, companyController.fetchMyCompanies);
 
 
 export default router;
