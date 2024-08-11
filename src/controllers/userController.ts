@@ -108,7 +108,7 @@ export const isAdmin = async (req: Request, res: Response) => {
         // Retrieve all users from the database
         const companies = await Company.find({});
         
-        const isUserAdmin = companies.some(company => company.admin.includes(new mongoose.Types.ObjectId(userId)));
+        const isUserAdmin = companies.some(company => company.admins.includes(new mongoose.Types.ObjectId(userId)));
 
         // Return relevant user information
         if (isUserAdmin) {

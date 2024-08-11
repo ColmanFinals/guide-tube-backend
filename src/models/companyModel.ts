@@ -1,18 +1,18 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
-interface ICompany extends Document {
+export interface ICompany extends Document {
     creator: mongoose.Types.ObjectId;
     name: string;
     users: mongoose.Types.ObjectId[];
-    admin: mongoose.Types.ObjectId[];
-    guides: mongoose.Types.ObjectId[]; // Array of ObjectIds referencing Guid
+    admins: mongoose.Types.ObjectId[];
+    guides: mongoose.Types.ObjectId[]; 
 }
 
 const companySchema = new Schema<ICompany>({
     creator: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     name: { type: String, required: true, unique: true },
     users: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
-    admin: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
+    admins: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
     guides: [{ type: Schema.Types.ObjectId, ref: 'Guide', default: [] }] 
 });
 
