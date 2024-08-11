@@ -70,7 +70,14 @@ export const updateCompany = async (req: Request, res: Response) => {
 
 export const fetchAllCompanies = async (): Promise<ICompanyResponse[]> => {
     try {
-        const companies: ICompanyResponse[] = await Company.find().populate('creator users admins guides');
+        const companies: ICompanyResponse[] = await Company.find().populate('creator users admins guides').populate({
+            path: 'guides',
+            populate: {
+                path: 'videos',
+                model: 'Video'
+            }
+        });
+;
         return companies;
     } catch (error) {
         console.error("Error fetching companies:", error);
@@ -78,7 +85,6 @@ export const fetchAllCompanies = async (): Promise<ICompanyResponse[]> => {
     }
 };
 
-// This function handles the HTTP response.
 export const getAllCompanies = async (req: Request, res: Response) => {
     try {
         const companies = await fetchAllCompanies();
@@ -138,7 +144,14 @@ export const getCompanyByName = async (companyName: string): Promise<ICompanyRes
     try {
 
         // Retrieve company from the database by companyId
-        const company: ICompanyResponse | null = await Company.findOne({ name: companyName }).populate('creator users admins guides');
+        const company: ICompanyResponse | null = await Company.findOne({ name: companyName }).populate('creator users admins guides').populate({
+            path: 'guides',
+            populate: {
+                path: 'videos',
+                model: 'Video'
+            }
+        });
+;
         return company;
     } catch (error) {
         console.log(error)
