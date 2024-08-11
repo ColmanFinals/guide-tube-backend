@@ -152,3 +152,29 @@ export const getCompanyGuidesForUser = async (req: Request, res: Response): Prom
 };
 
 
+export const getGuideById = async (req: Request, res: Response): Promise<IGuide | null> => {
+    const { user, guideId } = req.body;
+    const currentUser = await findUser(user, res);
+    if (!currentUser) return null;
+
+    try {
+        // Find the guide by ID and increment the views by 1
+        const guide: IGuide | null = await Guide.findByIdAndUpdate(
+            guideId,
+            { $inc: { views: 1 } },  // Increment the views field by 1
+            { new: true }  // Return the updated document
+        ).populate('playlist videos');  // Optionally populate related fields
+
+        if (!guide) {
+            res.status(404).send("Guide not found");
+            return null;
+        }
+
+        res.status(200).json(guide);
+        return guide;
+    } catch (error) {
+        console.error("Error retrieving guide by ID:", error);
+        res.status(500).send("Internal Server Error");
+        return null;
+    }
+};
