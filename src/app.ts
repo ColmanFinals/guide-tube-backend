@@ -56,8 +56,8 @@ if (process.env.NODE_ENV !== 'production') {
 } else {
   console.log('PRODUCTION');
   const options2 = {
-    key: fs.readFileSync('/cert/client-key.pem'),
-    cert: fs.readFileSync('/cert/client-cert.pem')
+    key: fs.readFileSync('/cert/server.key'),
+    cert: fs.readFileSync('/cert/server.crt')
   };
   server = https.createServer(options2, app).listen(PORT, () => {
     console.log(`HTTPS Server is running on port ${PORT}`);
