@@ -24,7 +24,7 @@ export const createCompany = async (req: Request, res: Response) => {
             creator: new mongoose.Types.ObjectId(creator._id), // Reference to User collection
             name,
             users: [],
-            admin: [],
+            admins: [],
             guides: []
         });
 
@@ -48,7 +48,7 @@ export const updateCompany = async (req: Request, res: Response) => {
                 $set: {
                     name,
                     users: users.map((user: string) => new mongoose.Types.ObjectId(user)),
-                    admin: admin.map((admin: string) => new mongoose.Types.ObjectId(admin)),
+                    admins: admin.map((admin: string) => new mongoose.Types.ObjectId(admin)),
                     guides: guides.map((guid: string) => new mongoose.Types.ObjectId(guid))
                 }
             },
@@ -126,7 +126,7 @@ export const getCompanyById = async (req: Request, res: Response) => {
         const companyId = req.params.companyId;
 
         // Retrieve company from the database by companyId
-        const company = await Company.findById(companyId).populate('creator users admin guides');
+        const company = await Company.findById(companyId).populate('creator users admins guides');
 
         if (!company) {
             return res.status(404).json({ error: "Company not found" });
@@ -322,7 +322,7 @@ export const fetchMyCompanies = async (req: Request, res: Response) => {
     try {
         const userId = req.body.user._id
         console.log(userId)
-        const adminCompanies = await Company.find({ admin: { $in: [userId] } })
+        const adminCompanies = await Company.find({ admins: { $in: [userId] } })
         console.log(adminCompanies)
         
         // Return the list of companies
