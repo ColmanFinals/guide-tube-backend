@@ -85,40 +85,32 @@ export const getUserById = async (req: Request, res: Response) => {
 
 export const fetchAllUsers = async (req: Request, res: Response) => {
     try {
-        // Retrieve all users from the database
         const users = await User.find({});
-
-        if (!users || users.length === 0) {
+        if (!users.length) {
             return res.status(404).json({ error: "No users found" });
         }
-
-        // Return relevant user information
-        res.status(200).send(users);
-
+        res.status(200).json(users);
     } catch (error) {
         console.error("Error fetching all users:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
 
-// Is user Admin
 export const isAdmin = async (req: Request, res: Response) => {
     try {
-        const userId = req.body["user"]["_doc"]["_id"]
-        // Retrieve all users from the database
-        const companies = await Company.find({});
-        
-        const isUserAdmin = companies.some(company => company.admins.includes(new mongoose.Types.ObjectId(userId)));
-
-        // Return relevant user information
-        if (isUserAdmin) {
-            res.status(200).send({ isAdmin: true });
-        } else {
-            res.status(200).send({ isAdmin: false });
+        const userId = req.body.user?._id;
+        if (!userId) {
+            return res.status(400).json({ error: "User ID not provided" });
         }
 
+        const companies = await Company.find({});
+        const isUserAdmin = companies.some(company =>
+            company.admins.includes(new mongoose.Types.ObjectId(userId))
+        );
+
+        res.status(200).json({ isAdmin: isUserAdmin });
     } catch (error) {
-        console.error("Error finding if a user is admin:", error);
+        console.error("Error checking admin status:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
