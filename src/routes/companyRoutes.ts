@@ -347,23 +347,22 @@ router.delete("/delete/:companyId", authenticate, checkSystemRole, companyContro
  *    security:
  *    - bearerAuth: []
  *    responses:
-*      200:
-*        description: List of companies where the user is an admin
-*        content:
-*          application/json:
-*            schema:
-*              type: object
-*              properties:
-*                adminCompanies:
-*                  type: array
-*                  items:
-*                    $ref: '#/components/schemas/Company'
+ *      200:
+ *        description: List of companies where the user is an admin
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                adminCompanies:
+ *                  type: array
+ *                  items:
+ *                    $ref: '#/components/schemas/Company'
  *      401:
  *        description: Unauthorized
  *      500:
  *        description: Internal Server Error
  */
 router.get("/fetchMyCompanies", authenticate, companyController.fetchMyCompanies);
-
 
 export default router;
