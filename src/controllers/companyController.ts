@@ -9,6 +9,7 @@ export interface ICompanyResponse extends Document {
     _id: string;
     creator: IUser;
     name: string;
+    logo: string;
     users: (IUser)[];
     admins: (IUser)[];
     guides: (IGuide)[]; 
@@ -17,12 +18,13 @@ export interface ICompanyResponse extends Document {
 // Create Company
 export const createCompany = async (req: Request, res: Response) => {
     try {
-        const { name } = req.body;
+        const { name, logo } = req.body;
         const creator = req.body.user; // Assuming authenticate middleware adds the user object to req
         
         const newCompany = new Company({
             creator: new mongoose.Types.ObjectId(creator._id), // Reference to User collection
             name,
+            logo,
             users: [],
             admins: [],
             guides: []
@@ -40,13 +42,14 @@ export const createCompany = async (req: Request, res: Response) => {
 // Update Company
 export const updateCompany = async (req: Request, res: Response) => {
     try {
-        const { companyId, name, users, admin, guides } = req.body;
+        const { companyId, name, logo, users, admin, guides } = req.body;
 
         const updatedCompany = await Company.findByIdAndUpdate(
             companyId,
             {
                 $set: {
                     name,
+                    logo,
                     users: users.map((user: string) => new mongoose.Types.ObjectId(user)),
                     admins: admin.map((admin: string) => new mongoose.Types.ObjectId(admin)),
                     guides: guides.map((guid: string) => new mongoose.Types.ObjectId(guid))

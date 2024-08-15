@@ -3,6 +3,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface ICompany extends Document {
     creator: mongoose.Types.ObjectId;
     name: string;
+    logo: string;
     users: mongoose.Types.ObjectId[];
     admins: mongoose.Types.ObjectId[];
     guides: mongoose.Types.ObjectId[]; 
@@ -11,9 +12,10 @@ export interface ICompany extends Document {
 const companySchema = new Schema<ICompany>({
     creator: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     name: { type: String, required: true, unique: true },
+    logo: { type: String, required: true, unique: true },
     users: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
     admins: [{ type: Schema.Types.ObjectId, ref: 'User', default: [] }],
-    guides: [{ type: Schema.Types.ObjectId, ref: 'Guide', default: [] }] 
+    guides: [{ type: Schema.Types.ObjectId, ref: 'Guide', default: [] }]
 });
 
 const Company = mongoose.model<ICompany>('Company', companySchema);
