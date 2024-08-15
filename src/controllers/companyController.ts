@@ -120,7 +120,7 @@ export async function isUserInCompany(companyName: string, userId: mongoose.Type
     if (!company) {
         return false;
     }
-    return company.users.includes(userId)
+    return company.users.includes(userId) || company.admins.includes(userId)
 }
 
 // Get Company by ID
