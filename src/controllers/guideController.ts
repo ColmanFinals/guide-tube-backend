@@ -151,19 +151,29 @@ export const getCompanyGuidesForUser = async (req: Request, res: Response): Prom
 
 };
 
+let previousUser: IUser | null = null;
 
 export const getGuideById = async (req: Request, res: Response): Promise<IGuide | null> => {
     const { user, guideId } = req.body;
     const currentUser = await findUser(user, res);
     if (!currentUser) return null;
 
+    let guide: IGuide | null = null;
+
     try {
-        // Find the guide by ID and increment the views by 1
-        const guide: IGuide | null = await Guide.findByIdAndUpdate(
-            guideId,
-            { $inc: { views: 1 } },  // Increment the views field by 1
-            { new: true }  // Return the updated document
-        ).populate('playlist videos');  // Optionally populate related fields
+        if (!previousUser || currentUser._id.toString() !== previousUser._id.toString()) {
+            // Find the guide by ID and increment the views by 1
+            guide = await Guide.findByIdAndUpdate(
+                guideId,
+                { $inc: { views: 1 } },  // Increment the views field by 1
+                { new: true }  // Return the updated document
+            ).populate('playlist videos');  // Optionally populate related fields
+        } else {
+            // If the user is the same as the previous user, just find the guide without incrementing views
+            guide = await Guide.findById(guideId).populate('playlist videos');
+        }
+
+        previousUser = currentUser;
 
         if (!guide) {
             res.status(404).send("Guide not found");
