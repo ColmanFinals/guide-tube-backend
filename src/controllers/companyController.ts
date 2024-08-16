@@ -2,7 +2,7 @@ import Company from "../models/companyModel";
 import { Request, Response } from "express";
 import mongoose, { ClientSession, Types } from "mongoose";
 import { abortTransaction } from "./transactionsHandler";
-import { IUser } from "../models/userModel";
+import User, { IUser } from "../models/userModel";
 import { IGuide } from "../models/guideModel";
 
 export interface ICompanyResponse extends Document {
@@ -214,20 +214,26 @@ export const removeUserFromCompany = async (req: Request, res: Response) => {
 // Add Admin to Company
 export const addAdminToCompany = async (req: Request, res: Response) => {
     try {
-        const { companyId, adminId } = req.body;
+        
+        const { companyId, username } = req.body;
 
         const company = await Company.findById(companyId);
         if (!company) {
             return res.status(404).json({ error: "Company not found" });
         }
 
-        const mongoAdminId = new mongoose.Types.ObjectId(adminId)
-
-        if (company.users.includes(mongoAdminId)){
-            company.users = company.users.filter(user => !user.equals(adminId));
+        const user = await User.findOne({ username: username });
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
         }
 
-        if (!company.admins.includes(mongoAdminId)){
+        const mongoAdminId = new mongoose.Types.ObjectId(user._id);
+
+        if (company.users.includes(mongoAdminId)) {
+            company.users = company.users.filter(user => !user.equals(user._id));
+        }
+
+        if (!company.admins.includes(mongoAdminId)) {
             company.admins.push(mongoAdminId);
         }
         await company.save();
@@ -238,6 +244,7 @@ export const addAdminToCompany = async (req: Request, res: Response) => {
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
+  
 
 // Remove Admin from Company
 export const removeAdminFromCompany = async (req: Request, res: Response) => {

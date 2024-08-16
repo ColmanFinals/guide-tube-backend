@@ -59,7 +59,7 @@ router.post("/create", authenticate, checkSystemRole,companyController.createCom
  *      500:
  *        description: Internal Server Error
  */
-router.get("/getAll", authenticate, checkSystemRole, companyController.getAllCompanies);
+router.get("/getAll", authenticate, companyController.getAllCompanies);
 
 
 /**
