@@ -102,6 +102,7 @@ export async function validateUserAdminInCompany(companyName: string, userId: mo
     const company = await Company.findOne({ name: companyName }).session(session);
     if (!company) {
         await abortTransaction(session);
+        console.log(`Company ${companyName} not found`)
         res.status(404).send(`Company ${companyName} not found`);
         return null;
     }

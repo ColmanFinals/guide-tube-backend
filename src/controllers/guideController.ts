@@ -14,17 +14,24 @@ export const handleGuideSaving = async (req: Request, res: Response) => {
 
     try {
         const currentUser = await findUser(req.body.user, res, session);
-        if (!currentUser) return; // findUser sends the response if the user is not found
+        if (!currentUser){
+            console.log(`User ${req.body.user} doesn't exist`)
+            return; // findUser sends the response if the user is not found
+        } 
 
         const company = await validateUserAdminInCompany(companyName, currentUser._id, session, res);
-        if (!company) return; // validateUserInCompany sends the response if the user is not in the company's users list
+        if (!company) {
+            console.log(`User ${currentUser} is not admin in compant ${companyName}, can't upload guides.`)
+            return; // validateUserInCompany sends the response if the user is not in the company's users list
+        }
 
         const videoIds = await saveVideos(videoData, session);
         const savedPlaylist = await savePlaylist(playlistData, session);
         const savedGuide = await saveGuide(guideData, savedPlaylist._id, videoIds, currentUser._id, session);
 
+        console.log("Successfully saved videos, playlist, guide")
         await associateGuideWithCompany(companyName, savedGuide._id, session);
-
+        console.log("Successfully associated between guide and company")
         await commitTransaction(session);
         return res.status(201).send("Success");
     } catch (error) {
@@ -51,18 +58,30 @@ async function findUser(userId: string, res: Response, session?: ClientSession):
 }
 
 async function saveVideos(videoData: IVideo[], session: ClientSession): Promise<string[]> {
-    const videoIds: string[] = [];
-    for (const video of videoData) {
-        const newVideo = new Video(video);
-        const savedVideo = await newVideo.save({ session });
-        videoIds.push(savedVideo._id.toString());
+    try{
+        const videoIds: string[] = [];
+        for (const video of videoData) {
+            const newVideo = new Video(video);
+            console.log(`Saving video: ${newVideo}`)
+            const savedVideo = await newVideo.save({ session });
+            videoIds.push(savedVideo._id.toString());
+        }
+        return videoIds;
+    } catch (error) {
+        console.log("Error saving videos: " + error);
+        throw error;
     }
-    return videoIds;
+
 }
 
 async function savePlaylist(playlistData: any, session: ClientSession) {
-    const newPlaylist = new Playlist(playlistData);
-    return await newPlaylist.save({ session });
+    try{
+        const newPlaylist = new Playlist(playlistData);
+        return await newPlaylist.save({ session });
+    } catch (error){
+        console.log("Error saving playlist: " + error);
+        throw error;
+    }
 }
 
 async function saveGuide(
@@ -72,18 +91,29 @@ async function saveGuide(
     uploaderId: mongoose.Types.ObjectId,
     session: ClientSession
 ) {
+    try{
     const newGuide = new Guide({
         ...guideData,
         playlist: playlistId,
         videos: videoIds,
         uploader: uploaderId,
     });
-
+    console.log(`saving guide: ${newGuide}`);
     return await newGuide.save({ session });
+    } catch (error){
+        console.log("Error saving guide: " + error)
+        throw error
+    }
 }
 
 async function associateGuideWithCompany(companyName: string, guideId: string, session: ClientSession) {
-    await addGuidToCompany(companyName, guideId, session);
+    try{
+        console.log(`associateGuideWithCompany- company: ${companyName} guide id: ${guideId}`)
+        await addGuidToCompany(companyName, guideId, session);
+    } catch (error){
+        console.log("Error associating guide with company: " + error)
+        throw error
+    }
 }
 
 const filterCompanyGuidesForUser = async (company: ICompanyResponse, userId: mongoose.Types.ObjectId): Promise<IGuide[]> => {
