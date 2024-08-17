@@ -10,6 +10,7 @@ services:
       MONGO_URI: ""
     volumes:
       - /home/st111/cert/:/cert/
+      - /home/st111/public:/usr/src/app/public/
     networks:
       - guide_tube_network
     restart: always
