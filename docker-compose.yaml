@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    image: ghcr.io/colmanfinals/colmanfinals/guide-tube-backend:latest
+    container_name: guide_tube_backend
+    ports:
+      - "4000:3001"
+    environment:
+      MONGO_URI: ""
+    volumes:
+      - /home/st111/cert/:/cert/
+    networks:
+      - guide_tube_network
+    restart: always
+
+  frontend:
+    image: ghcr.io/colmanfinals/colmanfinals/guide-tube-frontend:latest
+    container_name: guide_tube_frontend
+    ports:
+      - "443:443"
+    volumes:
+      - /home/st111/cert/:/cert/
+    networks:
+      - guide_tube_network
+    restart: always
+
+networks:
+  guide_tube_network:
+    driver: bridge
