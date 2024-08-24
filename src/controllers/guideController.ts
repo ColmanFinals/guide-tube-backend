@@ -21,7 +21,7 @@ export const handleGuideSaving = async (req: Request, res: Response) => {
 
         const company = await validateUserAdminInCompany(companyName, currentUser._id, session, res);
         if (!company) {
-            console.log(`User ${currentUser} is not admin in compant ${companyName}, can't upload guides.`)
+            console.log(`User ${currentUser} is not admin in company ${companyName}, can't upload guides.`)
             return; // validateUserInCompany sends the response if the user is not in the company's users list
         }
 
@@ -35,6 +35,7 @@ export const handleGuideSaving = async (req: Request, res: Response) => {
         await commitTransaction(session);
         return res.status(201).send("Success");
     } catch (error) {
+        console.log(`error while handeling new guide: ${error}`)
         await handleTransactionError(session, error, res);
     }
 }
