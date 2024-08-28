@@ -1,11 +1,10 @@
-// userController.ts
-
 import * as fs from "fs";
 import * as path from "path";
 import User from '../models/userModel';
 import { Request, Response } from "express";
 import Company from "../models/companyModel";
 import mongoose from "mongoose";
+import { Language } from "../models/languageEnum";
 
 
 export const updateUserPicture = async (req: Request, res: Response) => {
@@ -112,5 +111,33 @@ export const isAdmin = async (req: Request, res: Response) => {
     } catch (error) {
         console.error("Error checking admin status:", error);
         res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
+export const updateUserLanguage = async (req: Request, res: Response) => {
+    try {
+        const { language } = req.body;
+
+        // Validate if the provided language is one of the supported enums
+        if (!Object.values(Language).includes(language)) {
+            console.log(`Invalid language provided: ${language}`)
+            return res.status(400).json({ error: "Invalid language provided" });
+        }
+
+        const user = await User.findById(req.body.user);
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        // Update the user's language
+        user.language = language;
+        await user.save();
+        console.log(`User ${user.fullName} with id ${user._id} updated language to ${language} successfully!`)
+        return res.status(200).json({ message: "User language updated successfully", user });
+
+    } catch (error) {
+        console.error("Error updating user language:", error);
+        return res.status(500).json({ error: "An error occurred while updating user language" });
     }
 };

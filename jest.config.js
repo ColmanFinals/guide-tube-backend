@@ -1,6 +1,7 @@
 // jest.config.js
 
 module.exports = {
+  testTimeout: 30000,
   preset: 'ts-jest',
   testEnvironment: 'node',
   moduleNameMapper: {

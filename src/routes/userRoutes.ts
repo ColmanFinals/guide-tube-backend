@@ -134,4 +134,43 @@ router.get("/fetch", authenticate, userController.fetchAllUsers);
  */
 router.get("/isAdmin", authenticate, userController.isAdmin);
 
+/**
+ * @openapi
+ * /user/updateLanguage:
+ *  put:
+ *    tags:
+ *     - User
+ *    summary: Update user language
+ *    security:
+ *    - bearerAuth: []
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              language:
+ *                type: string
+ *                required: true
+ *                enum: [en, he]
+ *    responses:
+ *      200:
+ *        description: User language updated successfully
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                message:
+ *                  type: string
+ *      400:
+ *        description: Bad request
+ *      404:
+ *        description: User not found
+ *      500:
+ *        description: Internal Server Error
+ */
+router.put("/updateLanguage", authenticate, userController.updateUserLanguage);
+
 export default router;

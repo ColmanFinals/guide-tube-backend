@@ -3,6 +3,7 @@ import {Request, Response} from "express";
 import bcrypt from "bcrypt";
 import jwt, {JwtPayload} from "jsonwebtoken";
 import User from "../models/userModel";
+import { Language } from "../models/languageEnum";
 
 const accessTokenSecret: string = process.env.ACCESS_TOKEN_SECRET as string;
 const jwtTokenExpiration: string = process.env.JWT_TOKEN_EXPIRATION as string;
@@ -25,14 +26,15 @@ async function signup(req: Request, res: Response) {
             username: username,
             password: hashedPassword,
             fullName: fullName,
+            language: Language.ENGLISH
         });
 
-        await newUser.save();
-
+        const savedUser = await newUser.save();
+        console.log(`user ${savedUser} saved successfully`)
         // Return a success message
         res.status(200).json({message: "User registered successfully"});
     } catch (error) {
-        console.error(error);
+        console.error("error while creating a user " + error);
         res.status(500).json({message: "Internal Server Error"});
     }
 }
@@ -85,6 +87,7 @@ async function googleLogin(req: Request, res: Response) {
                 username: credentials.email,
                 password: hashedPassword,
                 fullName: credentials.name,
+                language: Language.ENGLISH,
                 picture: 'images/' + credentials.email + ".jpg"
             });
             user = await newUser.save();
@@ -124,6 +127,7 @@ async function refreshToken(req: Request, res: Response) {
 
     jwt.verify(token, refreshTokenSecret, async (err, userInfo) => {
         if (err) {
+            console.log(err)
             return res.status(403).send(err.message);
         }
 

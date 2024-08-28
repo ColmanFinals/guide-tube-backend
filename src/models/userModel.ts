@@ -1,4 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
+import { Language } from "./languageEnum";
 
 /**
  * @openapi
@@ -61,10 +62,11 @@ export interface IUser extends Document {
     fullName: string;
     tokens: string[];
     picture: string;
-    role: string; // Add role field to the interface
+    role: string;
+    language: Language;
 }
 
-const defaultPicturePath = "images/default-user-profile.jpg"; // Set your default path here
+const defaultPicturePath = "images/default-user-profile.jpg";
 
 const userSchema = new Schema<IUser>({
     username: { type: String, required: true },
@@ -72,9 +74,9 @@ const userSchema = new Schema<IUser>({
     fullName: { type: String, required: true },
     tokens: { type: [String], required: true },
     picture: { type: String, default: defaultPicturePath, required: true },
-    role: { type: String, default: "user" } // Add role field with default value
-});
-
+    role: { type: String, default: "user" ,required: true},
+    language: { type: String, default: Language.ENGLISH, required: true, enum: Object.values(Language) },
+})
 const User = mongoose.model<IUser>("User", userSchema);
 
 export default User;
