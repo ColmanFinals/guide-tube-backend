@@ -88,7 +88,7 @@ async function googleLogin(req: Request, res: Response) {
                 password: hashedPassword,
                 fullName: credentials.name,
                 language: Language.ENGLISH,
-                picture: 'images/' + credentials.email + ".jpg"
+                picture: credentials.picture
             });
             user = await newUser.save();
         }

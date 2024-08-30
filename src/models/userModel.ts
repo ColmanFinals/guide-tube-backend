@@ -66,7 +66,7 @@ export interface IUser extends Document {
     language: Language;
 }
 
-const defaultPicturePath = "images/default-user-profile.jpg";
+const defaultPicturePath = process.env.SERVER_URL + "/images/default-user-profile.jpg";
 
 const userSchema = new Schema<IUser>({
     username: { type: String, required: true },

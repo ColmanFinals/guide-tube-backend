@@ -13,7 +13,7 @@ export const updateUserPicture = async (req: Request, res: Response) => {
         const { userId } = req.body;
         const pictureName = req.file?.filename;
         // Construct the file paths
-        const picturePath = `images/${pictureName}`;
+        const picturePath = process.env.SERVER_URL + `/images/${pictureName}`;
         const currentUser = await User.findById(userId);
 
         if (!currentUser) {
